@@ -129,3 +129,8 @@ function populateTable(data, columns, tableTitle = '') {
 function clearRecords() {
     recordsTable.innerHTML = '';
 }
+
+// Limpiar los registros
+function clearRecords() {
+    recordsTable.innerHTML = '';
+}
