@@ -26,7 +26,7 @@ modalSearchButton.addEventListener('click', () => {
     clearRecords();
 
     // Solicitud GET en axios con el nombre del país
-    axios.get(`//18.234.137.216/php-intro-connection/getRecords.php?search=${encodeURIComponent(countryName)}`)
+    axios.get(`//3.81.102.180/php-intro-connection/getRecords.php?search=${encodeURIComponent(countryName)}`)
         .then(response => {
             const data = response.data;
             console.log('Resultado de búsqueda:', data); // Verifica la respuesta
@@ -57,7 +57,7 @@ modalSearchButton.addEventListener('click', () => {
 // Mostrar registros de la tabla country
 countryBtn.addEventListener('click', () => {
     clearRecords();
-    axios.get('//18.234.137.216/php-intro-connection/getRecords.php?table=country')
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=country')
         .then(response => {
             console.log(response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
@@ -70,7 +70,7 @@ countryBtn.addEventListener('click', () => {
 // Mostrar registros de la tabla city
 cityBtn.addEventListener('click', () => {
     clearRecords();
-    axios.get('//18.234.137.216/php-intro-connection/getRecords.php?table=city')
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=city')
         .then(response => {
             console.log(response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['ID', 'Name', 'CountryCode', 'District', 'Population'], 'Ciudades');
@@ -83,7 +83,7 @@ cityBtn.addEventListener('click', () => {
 // Mostrar registros de la tabla countrylanguage
 countryLanguageBtn.addEventListener('click', () => {
     clearRecords();
-    axios.get('//18.234.137.216/php-intro-connection/getRecords.php?table=countrylanguage')
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=countrylanguage')
         .then(response => {
             console.log(response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['CountryCode', 'Language', 'IsOfficial', 'Percentage'], 'Idiomas');
