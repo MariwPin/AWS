@@ -57,41 +57,22 @@ modalSearchButton.addEventListener('click', () => {
 // Mostrar registros de la tabla country
 countryBtn.addEventListener('click', () => {
     clearRecords();
-    fetchCountryByIp(); // Llama a la función para obtener el país según la IP
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=country')
+        .then(response => {
+            console.log('Respuesta de países:', response.data);  // Verifica la estructura de los datos en la consola
+            populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
+        })
+        .catch(error => {
+            console.error(error);
+        });
 });
-
-// Función para obtener el país según la IP
-function fetchCountryByIp() {
-    axios.get('index.php')
-        .then(response => {
-            const locationData = response.data; // Obtén los datos de localización
-            const countryCode3 = locationData.country_code3; // Usa el código de país (ISO 3166-1 alpha-3)
-            fetchCountryData(countryCode3); // Llama a la función para obtener datos del país
-        })
-        .catch(error => {
-            console.error('Error al obtener la información de la IP:', error);
-        });
-}
-
-// Función para obtener datos del país usando el country_code3
-function fetchCountryData(countryCode3) {
-    // Realiza la solicitud a getRecords.php con el country_code3
-    axios.get(`//3.81.102.180/php-intro-connection/getRecords.php?country_code3=${countryCode3}`)
-        .then(response => {
-            const countries = response.data; // Asegúrate de que aquí obtienes el formato correcto
-            populateTable(countries, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países'); // Poblamos la tabla con los países filtrados
-        })
-        .catch(error => {
-            console.error('Error al obtener los datos del país:', error);
-        });
-}
 
 // Mostrar registros de la tabla city
 cityBtn.addEventListener('click', () => {
     clearRecords();
     axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=city')
         .then(response => {
-            console.log(response.data);  // Verifica la estructura de los datos en la consola
+            console.log('Respuesta de ciudades:', response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['ID', 'Name', 'CountryCode', 'District', 'Population'], 'Ciudades');
         })
         .catch(error => {
@@ -104,7 +85,7 @@ countryLanguageBtn.addEventListener('click', () => {
     clearRecords();
     axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=countrylanguage')
         .then(response => {
-            console.log(response.data);  // Verifica la estructura de los datos en la consola
+            console.log('Respuesta de idiomas:', response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['CountryCode', 'Language', 'IsOfficial', 'Percentage'], 'Idiomas');
         })
         .catch(error => {
@@ -148,3 +129,4 @@ function populateTable(data, columns, tableTitle = '') {
 function clearRecords() {
     recordsTable.innerHTML = '';
 }
+
