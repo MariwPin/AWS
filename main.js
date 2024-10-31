@@ -55,16 +55,22 @@ modalSearchButton.addEventListener('click', () => {
 });
 
 // Mostrar registros de la tabla country
-countryBtn.addEventListener('click', () => {
+countryBtn.addEventListener('click', async () => {
     clearRecords();
-    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=country')
-        .then(response => {
-            console.log('Respuesta de países:', response.data);  // Verifica la estructura de los datos en la consola
-            populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    try {
+        // Paso 1: Llama a index.php para obtener el código de país basado en la IP
+        const ipResponse = await axios.get('//3.81.102.180/php-intro-connection/index.php');
+        const countryCode3 = ipResponse.data.country_code3;
+
+        // Paso 2: Usa el código de país obtenido en la solicitud a getRecords.php
+        const response = await axios.get(`//3.81.102.180/php-intro-connection/getRecords.php?table=country&country_code3=${countryCode3}`);
+        console.log('Respuesta de países filtrada:', response.data);  // Verifica la estructura de los datos en la consola
+
+        // Poblamos la tabla solo con los registros filtrados
+        populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
+    } catch (error) {
+        console.error("Error al obtener los datos de países filtrados:", error);
+    }
 });
 
 // Mostrar registros de la tabla city
@@ -129,4 +135,3 @@ function populateTable(data, columns, tableTitle = '') {
 function clearRecords() {
     recordsTable.innerHTML = '';
 }
-
