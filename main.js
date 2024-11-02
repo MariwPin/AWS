@@ -26,7 +26,7 @@ modalSearchButton.addEventListener('click', () => {
     clearRecords();
 
     // Solicitud GET en axios con el nombre del país
-    axios.get(`//52.71.167.115/php-intro-connection/getRecords.php?search=${encodeURIComponent(countryName)}`)
+    axios.get(`//3.81.102.180/php-intro-connection/getRecords.php?search=${encodeURIComponent(countryName)}`)
         .then(response => {
             const data = response.data;
             console.log('Resultado de búsqueda:', data); // Verifica la respuesta
@@ -59,15 +59,26 @@ countryBtn.addEventListener('click', async () => {
     clearRecords();
     try {
         // Paso 1: Llama a index.php para obtener el código de país basado en la IP
-        const ipResponse = await axios.get('//52.71.167.115/php-intro-connection/index.php');
+        const ipResponse = await axios.get('//3.81.102.180/php-intro-connection/index.php');
         const countryCode3 = ipResponse.data.country_code3;
 
-        // Paso 2: Usa el código de país obtenido en la solicitud a getRecords.php
-        const response = await axios.get(`//52.71.167.115/php-intro-connection/getRecords.php?table=country&country_code3=${countryCode3}`);
-        console.log('Respuesta de países filtrada:', response.data);  // Verifica la estructura de los datos en la consola
+        console.log('Código de país obtenido:', countryCode3); // Verifica que se obtuvo el código
 
-        // Poblamos la tabla solo con los registros filtrados
-        populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
+        // Asegúrate de que el countryCode3 no sea undefined
+        if (countryCode3) {
+            // Paso 2: Usa el código de país obtenido en la solicitud a getRecords.php
+            const response = await axios.get(`//3.81.102.180/php-intro-connection/getRecords.php?table=country&country_code3=${countryCode3}`);
+            console.log('Respuesta de países filtrada:', response.data);  // Verifica la estructura de los datos en la consola
+
+            // Poblamos la tabla solo con los registros filtrados
+            if (response.data.length > 0) {
+                populateTable(response.data, ['Code', 'Name', 'Continent', 'Region', 'Population'], 'Países');
+            } else {
+                alert("No se encontraron registros para el país correspondiente.");
+            }
+        } else {
+            console.error("El country_code3 no está definido.");
+        }
     } catch (error) {
         console.error("Error al obtener los datos de países filtrados:", error);
     }
@@ -76,7 +87,7 @@ countryBtn.addEventListener('click', async () => {
 // Mostrar registros de la tabla city
 cityBtn.addEventListener('click', () => {
     clearRecords();
-    axios.get('//52.71.167.115/php-intro-connection/getRecords.php?table=city')
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=city')
         .then(response => {
             console.log('Respuesta de ciudades:', response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['ID', 'Name', 'CountryCode', 'District', 'Population'], 'Ciudades');
@@ -89,7 +100,7 @@ cityBtn.addEventListener('click', () => {
 // Mostrar registros de la tabla countrylanguage
 countryLanguageBtn.addEventListener('click', () => {
     clearRecords();
-    axios.get('//52.71.167.115/php-intro-connection/getRecords.php?table=countrylanguage')
+    axios.get('//3.81.102.180/php-intro-connection/getRecords.php?table=countrylanguage')
         .then(response => {
             console.log('Respuesta de idiomas:', response.data);  // Verifica la estructura de los datos en la consola
             populateTable(response.data, ['CountryCode', 'Language', 'IsOfficial', 'Percentage'], 'Idiomas');
